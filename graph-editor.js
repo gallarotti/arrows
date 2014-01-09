@@ -179,6 +179,11 @@ window.onload = function()
         draw();
     } );
 
+    d3.select( "#add_relationship_button" ).on( "click", function ()
+    {
+        createNewRelationship();
+    } );
+
     function onControlEnter(saveChange)
     {
         return function()
@@ -197,6 +202,9 @@ window.onload = function()
         editor.classed( "hide", false );
 
         var node = this.__data__.model;
+
+        var idField = editor.select("#node_id");
+        idField.node().value = node.id || "";
 
         var captionField = editor.select("#node_caption");
         captionField.node().value = node.caption() || "";
@@ -241,6 +249,43 @@ window.onload = function()
         editor.select("#edit_node_delete").on("click", deleteNode);
     }
 
+    function createNewRelationship()
+    {
+        var editor = d3.select(".pop-up-editor.newrelationship");
+        appendModalBackdrop();
+        editor.classed( "hide", false );
+
+        var newrelationshipTypeField = editor.select("#newrelationship_type");
+        newrelationshipTypeField.node().select();
+        var newrelationshipFromField = editor.select("#newrelationship_from");
+        var newrelationshipToField = editor.select("#newrelationship_to");
+        var newpropertiesField = editor.select("#newrelationship_properties");
+
+        function saveChange()
+        {
+            var newrelationship = graphModel.createRelationship(
+                graphModel.lookupNode(newrelationshipFromField.node().value), 
+                graphModel.lookupNode(newrelationshipToField.node().value));
+            newrelationship.relationshipType( newrelationshipTypeField.node().value );
+            newrelationship.properties().clearAll();
+            newpropertiesField.node().value.split("\n").forEach(function(line) {
+                var tokens = line.split(/: */);
+                if (tokens.length === 2) {
+                    var key = tokens[0].trim();
+                    var value = tokens[1].trim();
+                    if (key.length > 0 && value.length > 0) {
+                        newrelationship.properties().set(key, value);
+                    }
+                }
+            });
+            save( formatMarkup() );
+            draw();
+            cancelModal();
+        }
+
+        editor.select("#new_relationship_save").on("click", saveChange);
+    }
+
     function editRelationship()
     {
         var editor = d3.select(".pop-up-editor.relationship");
@@ -248,6 +293,14 @@ window.onload = function()
         editor.classed( "hide", false );
 
         var relationship = this.__data__.model;
+
+        var relationshipFromField = editor.select("#relationship_from");
+        relationshipFromField.node().value = relationship.start.id || "";
+        relationshipFromField.node().select();
+
+        var relationshipToField = editor.select("#relationship_to");
+        relationshipToField.node().value = relationship.end.id || "";
+        relationshipToField.node().select();
 
         var relationshipTypeField = editor.select("#relationship_type");
         relationshipTypeField.node().value = relationship.relationshipType() || "";
@@ -260,6 +313,8 @@ window.onload = function()
 
         function saveChange()
         {
+            relationship.start = graphModel.lookupNode(relationshipFromField.node().value);
+            relationship.end = graphModel.lookupNode(relationshipToField.node().value);
             relationship.relationshipType( relationshipTypeField.node().value );
             relationship.properties().clearAll();
             propertiesField.node().value.split("\n").forEach(function(line) {

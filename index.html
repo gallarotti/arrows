@@ -32,6 +32,7 @@
 
 <div class="tools form-inline well">
   <button class="btn" id="add_node_button"><i class="icon-plus"></i> Node</button>
+  <button class="btn" id="add_relationship_button"><i class="icon-plus"></i> Relationship</button>
   <button class="btn" id="exportMarkupButton">Export Markup</button>
   <button class="btn" id="exportSvgButton">Export SVG</button>
   <label for="internalScale">Internal Scale</label>
@@ -81,6 +82,12 @@
   <div class="modal-body">
     <div class="form-horizontal">
       <div class="control-group">
+        <label class="control-label" for="node_id">ID</label>
+        <div class="controls">
+          <input id="node_id" type="text" value="" disabled>
+        </div>
+      </div>
+      <div class="control-group">
         <label class="control-label" for="node_caption">Caption</label>
         <div class="controls">
           <input id="node_caption" type="text" value="A">
@@ -116,6 +123,18 @@
         </div>
       </div>
       <div class="control-group">
+        <label class="control-label" for="relationship_from">From Node</label>
+        <div class="controls">
+          <input id="relationship_from" type="text" value="">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="relationship_to">To Node</label>
+        <div class="controls">
+          <input id="relationship_to" type="text" value="">
+        </div>
+      </div>
+      <div class="control-group">
         <label class="control-label" for="relationship_properties">Properties</label>
         <div class="controls">
           <textarea id="relationship_properties" rows="6"></textarea>
@@ -126,6 +145,43 @@
   <div class="modal-footer">
     <a href="#" class="btn cancel">Cancel</a>
     <a href="#" class="btn btn-primary" id="edit_relationship_save">Save</a>
+  </div>
+</div>
+<div class="modal hide pop-up-editor newrelationship" tabindex="-1">
+  <div class="modal-header">
+    <h3>Create Relationship</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="newrelationship_type">Type</label>
+        <div class="controls">
+          <input id="newrelationship_type" type="text" value="R">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="newrelationship_from">From Node</label>
+        <div class="controls">
+          <input id="newrelationship_from" type="text" value="0">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="newrelationship_to">To Node</label>
+        <div class="controls">
+          <input id="newrelationship_to" type="text" value="1">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="newrelationship_properties">Properties</label>
+        <div class="controls">
+          <textarea id="newrelationship_properties" rows="6"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn cancel">Cancel</a>
+    <a href="#" class="btn btn-primary" id="new_relationship_save">Save</a>
   </div>
 </div>
 
